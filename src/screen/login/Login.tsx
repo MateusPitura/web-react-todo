@@ -4,11 +4,11 @@ import { USER_LIST } from "../../constantes";
 import { ToastContainer } from "react-toastify";
 import { toastError } from '../../controller/Toast.tsx'
 import { getLocalItens } from '../../controller/LocalStorage.tsx'
+import { userType } from '../../types/user.ts'
 
-type userType = {
-    email: string,
-    password: string
-}
+//components
+import Input from "../../components/input/Input.tsx";
+import Form from "../../components/form/Form.tsx";
 
 const Login = () => {
 
@@ -29,7 +29,6 @@ const Login = () => {
     }
 
     const handleLoginUser = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
         let userEmail = event.target[0].value
         let userPassword = event.target[1].value
         validateLoginUser(userEmail, userPassword)
@@ -37,19 +36,13 @@ const Login = () => {
 
     return (
         <>
-            <form onSubmit={event => handleLoginUser(event)}>
-                <label>
-                    E-mail
-                    <input type="email" required/>
-                </label>
-                <label>
-                    Senha
-                    <input type="password" required/>
-                </label>
+            <Form onSubmit={handleLoginUser}>
+                <Input label="E-mail" type="email" />
+                <Input label="Senha" type="password" />
                 <button type="submit">Entrar</button>
-            </form>
+            </Form>
             <button onClick={() => navigate("/cadastro")}>
-                Criar cadastro
+                Não tenho cadastro
             </button>
             <ToastContainer />
         </>
