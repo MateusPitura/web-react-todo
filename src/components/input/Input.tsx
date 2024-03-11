@@ -4,7 +4,7 @@ const Input = ({ label, type }) => {
     return (
         <label>
             {label}
-            <input type={type} required />
+            <input type={type} />
         </label>
     )
 }

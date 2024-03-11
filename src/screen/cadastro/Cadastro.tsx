@@ -16,43 +16,46 @@ const Cadastro = () => {
 
     const validateDuplicatedUser = (email: string) => {
         const jsonData = getLocalItens(USER_LIST)
-        const userSearched = jsonData.map((item: userType) => {
-            if(item.email === email){
-                return item
-            }
-        })
-        if(!userSearched[0]){
+        const userSearched = jsonData.find((item: userType) =>
+            item.email === email
+        )
+        if (!userSearched) {
             return true
         }
         return false
     }
 
     const createUser = (newUser: userType) => {
-        if(!validateDuplicatedUser(newUser.email)){
+        if (!validateDuplicatedUser(newUser.email)) {
             toastError('Usuário já cadastrado')
             return -1
         }
         saveLocalItens(USER_LIST, newUser)
         toastSuccess('Usuário cadastrado')
-        setTimeout(()=> navigate("/login"), 1500)
+        setTimeout(() => navigate("/login"), 1500)
     }
 
     const handleCreateUser = (event: React.FormEvent<HTMLFormElement>) => {
         const newUser = {
+            id: new Date().getTime(),
             email: event.target[0].value,
-            password: event.target[1].value
+            password: event.target[1].value,
+            tasks: []
         }
         createUser(newUser)
     }
 
     return (
         <>
-            <Form onSubmit={handleCreateUser}>
+            <Form
+                onSubmit={handleCreateUser}
+                title={"Cadastro"}
+                buttonMessage={"Cadastrar"}
+            >
                 <Input label="E-mail" type="email" />
                 <Input label="Senha" type="password" />
-                <button type="submit">Cadastrar</button>
             </Form>
-            <ToastContainer/>
+            <ToastContainer />
         </>
     )
 }

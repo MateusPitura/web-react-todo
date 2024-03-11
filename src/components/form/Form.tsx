@@ -1,6 +1,6 @@
 import React from "react";
 
-const Form = ({children, onSubmit}) => {
+const Form = ({ children, onSubmit, title, buttonMessage }) => {
 
     const onSubmitAux = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
@@ -8,9 +8,13 @@ const Form = ({children, onSubmit}) => {
     }
 
     return (
-        <form onSubmit={event => onSubmitAux(event)}>
-            {children}
-        </form>
+        <>
+            <span>{title}</span>
+            <form onSubmit={event => onSubmitAux(event)}>
+                {children}
+                <button type="submit">{buttonMessage}</button>
+            </form>
+        </>
     )
 }
 

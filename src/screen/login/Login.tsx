@@ -1,9 +1,9 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { USER_LIST } from "../../constantes";
+import { USER_LIST, USER_LOGGED } from "../../constantes";
 import { ToastContainer } from "react-toastify";
 import { toastError } from '../../controller/Toast.tsx'
-import { getLocalItens } from '../../controller/LocalStorage.tsx'
+import { getLocalItens, setLocalItens } from '../../controller/LocalStorage.tsx'
 import { userType } from '../../types/user.ts'
 
 //components
@@ -16,30 +16,35 @@ const Login = () => {
 
     const validateLoginUser = (email: string, password: string) => {
         const userList = getLocalItens(USER_LIST)
-        const userLogged = userList?.map((item: userType) => {
-            if (item.email === email && item.password === password) {
-                return item
-            }
-        })
-        if (userLogged[0]) {
+        const userLogged = userList?.find((item: userType) =>
+            item.email === email && item.password === password
+        )
+        if (userLogged) {
             navigate("/")
-        } else {
-            toastError("Usuário ou senha inválidos")
+            return userLogged
         }
+        toastError("Usuário ou senha inválidos")
+        return -1
     }
 
     const handleLoginUser = (event: React.FormEvent<HTMLFormElement>) => {
-        let userEmail = event.target[0].value
-        let userPassword = event.target[1].value
-        validateLoginUser(userEmail, userPassword)
+        const newUser = {
+            email: event.target[0].value,
+            password: event.target[1].value
+        }
+        const userLogged = validateLoginUser(newUser.email, newUser.password)
+        setLocalItens(USER_LOGGED, userLogged)
     }
 
     return (
         <>
-            <Form onSubmit={handleLoginUser}>
+            <Form
+                onSubmit={handleLoginUser}
+                title={"Login"}
+                buttonMessage={"Entrar"}
+            >
                 <Input label="E-mail" type="email" />
                 <Input label="Senha" type="password" />
-                <button type="submit">Entrar</button>
             </Form>
             <button onClick={() => navigate("/cadastro")}>
                 Não tenho cadastro
