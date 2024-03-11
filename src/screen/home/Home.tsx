@@ -17,7 +17,9 @@ const Home = () => {
 
     useEffect(() => {
         const userLogged = getLocalItens(USER_LOGGED)
-        setUserTasks(userLogged.tasks)
+        const userList = getLocalItens(USER_LIST)
+        const userSearched = userList.find((item: userType) => item.id === userLogged.id)
+        setUserTasks(userSearched.tasks)
         setUserId(userLogged.id)
     }, [])
 
@@ -40,11 +42,29 @@ const Home = () => {
         setLocalItens(USER_LIST, userListUpdated)
     }
 
+    const handleConcluirTarefa = (id: number) => {
+        const userList = getLocalItens(USER_LIST)
+        const userListUpdated = userList.map((item: userType) => {
+            if (item.id === userId) {
+                const tasksUpdated = item.tasks?.map(element => {
+                    if (element.id === id) {
+                        element.status = !element.status
+                    }
+                    return element
+                })
+                setUserTasks(tasksUpdated ?? [])
+            }
+            return item
+        })
+        setLocalItens(USER_LIST, userListUpdated)
+    }
+
     const handleExcluirTarefa = (id: number) => {
         const userList = getLocalItens(USER_LIST)
         const userListUpdated = userList.map((item: userType) => {
             if (item.id === userId) {
                 const taskSearched = item.tasks?.find(element => element.id === id)
+                console.log(taskSearched)
                 const taskIndex = item.tasks?.indexOf(taskSearched!)
                 item.tasks?.splice(taskIndex!, 1)
                 setUserTasks(item.tasks ?? [])
@@ -52,10 +72,6 @@ const Home = () => {
             return item
         })
         setLocalItens(USER_LIST, userListUpdated)
-    }
-
-    const handleConcluirTarefa = (id: number) => {
-        
     }
 
     return (
@@ -76,10 +92,10 @@ const Home = () => {
                                 - {item.title}
                                 - {item.description}
                                 - {item.createDate}
-                                - {item.status}
+                                - {item.status ? 'Concluída' : 'Pendente'}
                             </div>
-                            <button onClick={()=>handleExcluirTarefa(item.id)}>Excluir</button>
-                            <button onClick={()=>handleConcluirTarefa(item.id)}>Concluir</button>
+                            <button onClick={() => handleExcluirTarefa(item.id)}>Excluir</button>
+                            <button onClick={() => handleConcluirTarefa(item.id)}>Concluir</button>
                         </div>
                     )
                 }
