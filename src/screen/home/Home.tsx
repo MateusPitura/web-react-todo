@@ -5,6 +5,7 @@ import { getLocalItens, setLocalItens } from "../../controller/LocalStorage.tsx"
 import { USER_LIST, USER_LOGGED } from "../../constantes.js";
 import { toastSuccess } from "../../controller/Toast.tsx";
 import { ToastContainer } from "react-toastify";
+import Modal from 'react-modal';
 
 //components
 import Form from "../../components/form/Form.tsx";
@@ -14,6 +15,9 @@ const Home = () => {
 
     const [userTaks, setUserTasks] = useState<taskType[]>([])
     const [userId, setUserId] = useState<number>()
+    const [modalIsOpen, setModalIsOpen] = useState(false)
+    const [taskTitle, setTaskTitle] = useState<string>()
+    const [taskDescription, setTaskDescription] = useState<string>()
 
     useEffect(() => {
         const userLogged = getLocalItens(USER_LOGGED)
@@ -64,7 +68,6 @@ const Home = () => {
         const userListUpdated = userList.map((item: userType) => {
             if (item.id === userId) {
                 const taskSearched = item.tasks?.find(element => element.id === id)
-                console.log(taskSearched)
                 const taskIndex = item.tasks?.indexOf(taskSearched!)
                 item.tasks?.splice(taskIndex!, 1)
                 setUserTasks(item.tasks ?? [])
@@ -74,17 +77,36 @@ const Home = () => {
         setLocalItens(USER_LIST, userListUpdated)
     }
 
+    const retrieveTarefa = (id: number) => {
+        const userList = getLocalItens(USER_LIST)
+        const userSearched = userList.find((item: userType) => item.id === userId)
+        const taskSearched = userSearched.tasks?.find((element: taskType) => element.id === id)
+        setTaskTitle(taskSearched?.title)   
+        setTaskDescription(taskSearched?.description)   
+    }
+
+    const handleEditarTarefa = (id: number) => {
+        retrieveTarefa(id)
+        setModalIsOpen(true)
+    }
+
     return (
         <>
-            <Form
-                title={"Nova tarefa"}
-                buttonMessage={"Criar"}
-                onSubmit={handleCriarTarefa}
+            <Modal
+                isOpen={modalIsOpen}
             >
-                <Input type="text" label="Título" />
-                <Input type="text" label="Descrição" />
-            </Form>
+                <Form
+                    title={"Nova tarefa"}
+                    buttonMessage={"Criar"}
+                    onSubmit={handleCriarTarefa}
+                >
+                    <Input type="text" label="Título" value={taskTitle} onChange={setTaskTitle}/>
+                    <Input type="text" label="Descrição" value={taskDescription} onChange={setTaskDescription}/>
+                </Form>
+                <button onClick={()=>setModalIsOpen(false)}>Fechar</button>
+            </Modal>
             <div>
+                <button onClick={()=>setModalIsOpen(true)}>Criar tarefa</button>
                 {
                     userTaks.map(item =>
                         <div key={item.id}>
@@ -96,6 +118,7 @@ const Home = () => {
                             </div>
                             <button onClick={() => handleExcluirTarefa(item.id)}>Excluir</button>
                             <button onClick={() => handleConcluirTarefa(item.id)}>Concluir</button>
+                            <button onClick={() => handleEditarTarefa(item.id)}>Editar</button>
                         </div>
                     )
                 }
