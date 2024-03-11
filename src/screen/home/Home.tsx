@@ -13,13 +13,15 @@ import Input from "../../components/input/Input.tsx";
 const Home = () => {
 
     const [userTaks, setUserTasks] = useState<taskType[]>([])
+    const [userId, setUserId] = useState<number>()
 
-    useEffect(()=>{
+    useEffect(() => {
         const userLogged = getLocalItens(USER_LOGGED)
         setUserTasks(userLogged.tasks)
+        setUserId(userLogged.id)
     }, [])
 
-    const handleCriarNovaTarefa = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleCriarTarefa = (event: React.FormEvent<HTMLFormElement>) => {
         const newTask: taskType = {
             id: new Date().getTime(),
             title: event.target[0].value,
@@ -28,16 +30,32 @@ const Home = () => {
             status: false,
         }
         const userList = getLocalItens(USER_LIST)
-        const userLogged = getLocalItens(USER_LOGGED)
         const userListUpdated = userList.map((item: userType) => {
-            if(item.id === userLogged.id){
+            if (item.id === userId) {
                 item.tasks?.push(newTask)
-                setUserTasks(item.tasks??[])
+                setUserTasks(item.tasks ?? [])
             }
             return item
         })
         setLocalItens(USER_LIST, userListUpdated)
-        toastSuccess('Tarefa criada!')
+    }
+
+    const handleExcluirTarefa = (id: number) => {
+        const userList = getLocalItens(USER_LIST)
+        const userListUpdated = userList.map((item: userType) => {
+            if (item.id === userId) {
+                const taskSearched = item.tasks?.find(element => element.id === id)
+                const taskIndex = item.tasks?.indexOf(taskSearched!)
+                item.tasks?.splice(taskIndex!, 1)
+                setUserTasks(item.tasks ?? [])
+            }
+            return item
+        })
+        setLocalItens(USER_LIST, userListUpdated)
+    }
+
+    const handleConcluirTarefa = (id: number) => {
+        
     }
 
     return (
@@ -45,19 +63,28 @@ const Home = () => {
             <Form
                 title={"Nova tarefa"}
                 buttonMessage={"Criar"}
-                onSubmit={handleCriarNovaTarefa}
+                onSubmit={handleCriarTarefa}
             >
-                <Input type="text" label="Título"/>
-                <Input type="text" label="Descrição"/>
+                <Input type="text" label="Título" />
+                <Input type="text" label="Descrição" />
             </Form>
             <div>
                 {
-                    userTaks.map(item => 
-                        <div key={item.id}>{item.title} - {item.description} - {item.createDate} - {item.status}</div>
+                    userTaks.map(item =>
+                        <div key={item.id}>
+                            <div>
+                                - {item.title}
+                                - {item.description}
+                                - {item.createDate}
+                                - {item.status}
+                            </div>
+                            <button onClick={()=>handleExcluirTarefa(item.id)}>Excluir</button>
+                            <button onClick={()=>handleConcluirTarefa(item.id)}>Concluir</button>
+                        </div>
                     )
                 }
             </div>
-            <ToastContainer/>
+            <ToastContainer />
         </>
     )
 }
