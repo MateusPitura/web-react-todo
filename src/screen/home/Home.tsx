@@ -10,14 +10,17 @@ import Modal from 'react-modal';
 //components
 import Form from "../../components/form/Form.tsx";
 import Input from "../../components/input/Input.tsx";
+import Card from "../../components/card/Card.tsx";
 
 const Home = () => {
 
     const [userTaks, setUserTasks] = useState<taskType[]>([])
     const [userId, setUserId] = useState<number>()
+    const [currentTaskId, setCurrentTaskId] = useState<number>()
     const [modalIsOpen, setModalIsOpen] = useState(false)
     const [taskTitle, setTaskTitle] = useState<string>()
     const [taskDescription, setTaskDescription] = useState<string>()
+    const [isEditionModeEnable, setIsEditionModeEnable] = useState(false)
 
     useEffect(() => {
         const userLogged = getLocalItens(USER_LOGGED)
@@ -81,13 +84,36 @@ const Home = () => {
         const userList = getLocalItens(USER_LIST)
         const userSearched = userList.find((item: userType) => item.id === userId)
         const taskSearched = userSearched.tasks?.find((element: taskType) => element.id === id)
-        setTaskTitle(taskSearched?.title)   
-        setTaskDescription(taskSearched?.description)   
+        setTaskTitle(taskSearched?.title)
+        setTaskDescription(taskSearched?.description)
     }
 
-    const handleEditarTarefa = (id: number) => {
-        retrieveTarefa(id)
+    const handleAbrirEditarTarefa = (id: number) => {
+        setCurrentTaskId(id) //Esse id será usado ao submeter o formulário de edição
+        retrieveTarefa(id) //Como tem um atraso ao setar o state, eu passo o ID como parâmetro ao invés de usar o state
+        setIsEditionModeEnable(true)
         setModalIsOpen(true)
+    }
+
+    const handleSubmitEditarTarefa = (event: React.FormEvent<HTMLFormElement>) => {
+        const userList = getLocalItens(USER_LIST)
+        const userListUpdated = userList.map((item: userType) => {
+            if (item.id === userId) {
+                const taskUpdated = item.tasks?.map((element: taskType) => {
+                    if (element.id === currentTaskId) {
+                        element.title = event.target[0].value
+                        element.description = event.target[1].value
+                    }
+                    return element
+                })
+                setUserTasks(taskUpdated ?? [])
+            }
+            return item
+        })
+        setLocalItens(USER_LIST, userListUpdated)
+        toastSuccess("Tarefa atualizada")
+        setModalIsOpen(false)
+        setIsEditionModeEnable(false)
     }
 
     return (
@@ -95,31 +121,45 @@ const Home = () => {
             <Modal
                 isOpen={modalIsOpen}
             >
-                <Form
-                    title={"Nova tarefa"}
-                    buttonMessage={"Criar"}
-                    onSubmit={handleCriarTarefa}
-                >
-                    <Input type="text" label="Título" value={taskTitle} onChange={setTaskTitle}/>
-                    <Input type="text" label="Descrição" value={taskDescription} onChange={setTaskDescription}/>
-                </Form>
-                <button onClick={()=>setModalIsOpen(false)}>Fechar</button>
+                {
+                    isEditionModeEnable ?
+                        <Form
+                            title={"Editar tarefa"}
+                            buttonMessage={"Editar"}
+                            onSubmit={handleSubmitEditarTarefa}
+                        >
+                            <Input type="text" label="Título" value={taskTitle} onChange={setTaskTitle} />
+                            <Input type="text" label="Descrição" value={taskDescription} onChange={setTaskDescription} />
+                        </Form>
+                        :
+                        <Form
+                            title={"Nova tarefa"}
+                            buttonMessage={"Criar"}
+                            onSubmit={handleCriarTarefa}
+                        >
+                            <Input type="text" label="Título" />
+                            <Input type="text" label="Descrição" />
+                        </Form>
+                }
+                <button onClick={() => {
+                    setModalIsOpen(false)
+                    setIsEditionModeEnable(false)
+                }}>Fechar</button>
             </Modal>
             <div>
-                <button onClick={()=>setModalIsOpen(true)}>Criar tarefa</button>
+                <button onClick={() => setModalIsOpen(true)}>Criar tarefa</button>
                 {
                     userTaks.map(item =>
-                        <div key={item.id}>
-                            <div>
-                                - {item.title}
-                                - {item.description}
-                                - {item.createDate}
-                                - {item.status ? 'Concluída' : 'Pendente'}
-                            </div>
-                            <button onClick={() => handleExcluirTarefa(item.id)}>Excluir</button>
-                            <button onClick={() => handleConcluirTarefa(item.id)}>Concluir</button>
-                            <button onClick={() => handleEditarTarefa(item.id)}>Editar</button>
-                        </div>
+                        <Card
+                            id={item.id}
+                            title={item.title}
+                            description={item.description}
+                            createDate={item.createDate}
+                            status={item.status}
+                            onDelete={() => handleExcluirTarefa(item.id)}
+                            onCompleting={() => handleConcluirTarefa(item.id)}
+                            onEdit={() => handleAbrirEditarTarefa(item.id)}
+                        />
                     )
                 }
             </div>
