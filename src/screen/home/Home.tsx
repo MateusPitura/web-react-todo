@@ -131,18 +131,9 @@ const Home = () => {
 
     const handleSortByDate = () => {
         const taskListSorted = [...userTaks]
-        taskListSorted.sort((a, b) => {
-            const dateA = new Date(a.createDate)
-            const dateB = new Date(a.createDate)
-            console.log(dateA)
-            console.log(dateB)
-            if (dateA.getTime() - dateB.getTime()) {
-                return 1 
-            } else {
-                return -1
-            }
-        })
-        console.log(taskListSorted)
+        taskListSorted.sort((a, b) =>
+            new Date(a.createDate).getTime() - new Date(b.createDate).getTime()
+        )
         setUserTasks(taskListSorted)
     }
 
