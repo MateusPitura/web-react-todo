@@ -2,7 +2,7 @@ import React from "react";
 
 const Card = ({ id, title, description, createDate, status, onDelete, onCompleting, onEdit }) => {
     return (
-        <div key={id}>
+        <div>
             <div>
                 - {title}
                 - {description}

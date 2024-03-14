@@ -116,6 +116,36 @@ const Home = () => {
         setIsEditionModeEnable(false)
     }
 
+    const handleSortByStatus = () => {
+        const taskListSorted = [...userTaks]
+        taskListSorted.sort(a => { //Ordena as tarefas, se for concluída (true) fica em baixa, se não fica em cima
+            if (a.status === true ) {
+                return -1 
+            } else {
+                return 1
+            }
+        })
+        console.log(taskListSorted)
+        setUserTasks(taskListSorted)
+    }
+
+    const handleSortByDate = () => {
+        const taskListSorted = [...userTaks]
+        taskListSorted.sort((a, b) => {
+            const dateA = new Date(a.createDate)
+            const dateB = new Date(a.createDate)
+            console.log(dateA)
+            console.log(dateB)
+            if (dateA.getTime() - dateB.getTime()) {
+                return 1 
+            } else {
+                return -1
+            }
+        })
+        console.log(taskListSorted)
+        setUserTasks(taskListSorted)
+    }
+
     return (
         <>
             <Modal
@@ -148,9 +178,12 @@ const Home = () => {
             </Modal>
             <div>
                 <button onClick={() => setModalIsOpen(true)}>Criar tarefa</button>
+                <button onClick={() => handleSortByStatus()}>Ordenar por status</button>
+                <button onClick={() => handleSortByDate()}>Ordenar por prazo</button>
                 {
                     userTaks.map(item =>
                         <Card
+                            key={item.id}
                             id={item.id}
                             title={item.title}
                             description={item.description}
