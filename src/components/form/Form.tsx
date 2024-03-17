@@ -1,4 +1,8 @@
 import React from "react";
+import './Form.css'
+
+//Componentes
+import Button from "../button/Button.tsx";
 
 const Form = ({ children, onSubmit, title, buttonMessage }) => {
 
@@ -8,13 +12,13 @@ const Form = ({ children, onSubmit, title, buttonMessage }) => {
     }
 
     return (
-        <>
-            <span>{title}</span>
-            <form onSubmit={event => onSubmitAux(event)}>
+        <div className="Form">
+            <span className="Form__title">{title}</span>
+            <form className="Form__formulario" onSubmit={event => onSubmitAux(event)}>
                 {children}
-                <button type="submit">{buttonMessage}</button>
+                <Button design={'primary'} type="submit">{buttonMessage}</Button>
             </form>
-        </>
+        </div>
     )
 }
 

@@ -1,0 +1,73 @@
+.Card__statusConcluido{
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    max-width: 400px;
+    min-width: 300px;
+    border-radius: 20px;
+    padding: 20px;
+    margin: 25px;
+    /* background-color: transparent */
+}
+
+.Card__statusPendente{
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    max-width: 400px;
+    min-width: 300px;
+    border-radius: 20px;
+    padding: 20px;
+    margin: 25px;
+}
+
+.Card__content{
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.Card__mainText{
+    flex: 6;
+    flex-wrap: wrap;    
+}
+
+.Card__titleConcluido{
+    display: flex;
+    padding-bottom: 5px;
+    font-size: 20px;
+    color: #09090B;
+}
+
+.Card__titlePendente{
+    text-decoration: line-through;
+    display: flex;
+    padding-bottom: 5px;
+    font-size: 20px;
+    color: #09090B;
+}
+
+.Card__description{
+    display: flex;
+    font-size: 18px;
+    color: #57534E
+}
+
+.Card__createDate{
+    padding-left: 20px;
+    display: flex;
+    flex: 2;
+    height: 100%;
+    align-self:flex-start;
+    font-size: 18px;
+    color: #57534E
+}
+
+.Card__buttonContainer{
+    margin-top: 10px;
+    display: flex;
+}
+
+.Card__button{
+    background-color: white;
+    border: none;
+    display: flex;
+    cursor: pointer;
+    padding-right: 10px;
+    outline: none;
+}

@@ -1,0 +1,39 @@
+.Button {
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.Button__primary{
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    cursor: pointer;
+    background-color: #4F674F;
+    color: white;
+    font-size: 20px;
+    font-family: inherit;
+}
+
+.Button__secondary{
+    padding: 10px;
+    border: 1px solid #4F674F;
+    border-radius: 5px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    cursor: pointer;
+    background-color: white;
+    color: #4F674F;
+    font-size: 20px;
+}
+
+.Button__tertiary{
+    padding: 10px;
+    background-color: white;
+    border: none;
+    cursor: pointer;
+    color: #4F674F;
+    font-size: 18px;
+    font-family: inherit;
+}

@@ -1,0 +1,34 @@
+.Home{
+    margin: 20px;
+}
+
+.Home__modal {
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10% auto 0% auto;
+    min-width: 400px;
+    max-width: 600px;
+
+}
+
+.Home__buttonContainer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0
+}
+
+.Home__header{
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.Home__cardList{
+    display: flex;
+    flex-wrap: wrap;
+
+}

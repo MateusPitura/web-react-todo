@@ -5,10 +5,12 @@ import { ToastContainer } from "react-toastify";
 import { toastError } from '../../controller/Toast.tsx'
 import { getLocalItens, setLocalItens } from '../../controller/LocalStorage.tsx'
 import { userType } from '../../types/user.ts'
+import './Login.css'
 
 //components
 import Input from "../../components/input/Input.tsx";
 import Form from "../../components/form/Form.tsx";
+import Button from "../../components/button/Button.tsx";
 
 const Login = () => {
 
@@ -37,7 +39,7 @@ const Login = () => {
     }
 
     return (
-        <>
+        <div className="Login">
             <Form
                 onSubmit={handleLoginUser}
                 title={"Login"}
@@ -45,12 +47,16 @@ const Login = () => {
             >
                 <Input label="E-mail" type="email" />
                 <Input label="Senha" type="password" />
+                <Button
+                    type='button'
+                    design={'tertiary'}
+                    onClick={() => navigate("/cadastro")}
+                >
+                    Não tenho cadastro
+                </Button>
             </Form>
-            <button onClick={() => navigate("/cadastro")}>
-                Não tenho cadastro
-            </button>
             <ToastContainer />
-        </>
+        </div>
     )
 }
 

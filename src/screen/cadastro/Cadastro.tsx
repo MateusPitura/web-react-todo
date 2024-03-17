@@ -5,6 +5,7 @@ import { toastError, toastSuccess } from "../../controller/Toast.tsx";
 import { saveLocalItens, getLocalItens } from "../../controller/LocalStorage.tsx";
 import { userType } from '../../types/user.ts'
 import { useNavigate } from "react-router";
+import './Cadastro.css'
 
 //components
 import Input from "../../components/input/Input.tsx";
@@ -27,7 +28,7 @@ const Cadastro = () => {
 
     const createUser = (newUser: userType) => {
         if (!validateDuplicatedUser(newUser.email)) {
-            toastError('Usuário já cadastrado')
+            toastError('E-mail já cadastrado')
             return -1
         }
         saveLocalItens(USER_LIST, newUser)
@@ -46,7 +47,7 @@ const Cadastro = () => {
     }
 
     return (
-        <>
+        <div className="Cadastro">
             <Form
                 onSubmit={handleCreateUser}
                 title={"Cadastro"}
@@ -56,7 +57,7 @@ const Cadastro = () => {
                 <Input label="Senha" type="password" />
             </Form>
             <ToastContainer />
-        </>
+        </div>
     )
 }
 

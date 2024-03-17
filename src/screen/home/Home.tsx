@@ -6,11 +6,13 @@ import { USER_LIST, USER_LOGGED } from "../../constantes.js";
 import { toastSuccess } from "../../controller/Toast.tsx";
 import { ToastContainer } from "react-toastify";
 import Modal from 'react-modal';
+import './Home.css'
 
 //components
 import Form from "../../components/form/Form.tsx";
 import Input from "../../components/input/Input.tsx";
 import Card from "../../components/card/Card.tsx";
+import Button from "../../components/button/Button.tsx";
 
 const Home = () => {
 
@@ -119,10 +121,10 @@ const Home = () => {
     const handleSortByStatus = () => {
         const taskListSorted = [...userTaks]
         taskListSorted.sort(a => { //Ordena as tarefas, se for concluída (true) fica em baixa, se não fica em cima
-            if (a.status === true ) {
-                return -1 
-            } else {
+            if (a.status === true) {
                 return 1
+            } else {
+                return -1
             }
         })
         console.log(taskListSorted)
@@ -138,57 +140,81 @@ const Home = () => {
     }
 
     return (
-        <>
+        <div className="Home">
             <Modal
                 isOpen={modalIsOpen}
+                className="Home__modal"
             >
-                {
-                    isEditionModeEnable ?
-                        <Form
-                            title={"Editar tarefa"}
-                            buttonMessage={"Editar"}
-                            onSubmit={handleSubmitEditarTarefa}
-                        >
-                            <Input type="text" label="Título" value={taskTitle} onChange={setTaskTitle} />
-                            <Input type="text" label="Descrição" value={taskDescription} onChange={setTaskDescription} />
-                        </Form>
-                        :
-                        <Form
-                            title={"Nova tarefa"}
-                            buttonMessage={"Criar"}
-                            onSubmit={handleCriarTarefa}
-                        >
-                            <Input type="text" label="Título" />
-                            <Input type="text" label="Descrição" />
-                        </Form>
-                }
-                <button onClick={() => {
-                    setModalIsOpen(false)
-                    setIsEditionModeEnable(false)
-                }}>Fechar</button>
+                <div>
+                    {
+                        isEditionModeEnable ?
+                            <Form
+                                title={"Editar tarefa"}
+                                buttonMessage={"Editar"}
+                                onSubmit={handleSubmitEditarTarefa}
+                            >
+                                <Input type="text" label="Título" value={taskTitle} onChange={setTaskTitle} />
+                                <Input type="text" label="Descrição" value={taskDescription} onChange={setTaskDescription} />
+                            </Form>
+                            :
+                            <Form
+                                title={"Nova tarefa"}
+                                buttonMessage={"Criar"}
+                                onSubmit={handleCriarTarefa}
+                            >
+                                <Input type="text" label="Título" />
+                                <Input type="text" label="Descrição" />
+                            </Form>
+                    }
+                    <div className="Home__buttonContainer">
+                        <Button
+                            type='button'
+                            design="tertiary"
+                            onClick={() => {
+                                setModalIsOpen(false)
+                                setIsEditionModeEnable(false)
+                            }}>Fechar</Button>
+                    </div>
+                </div>
             </Modal>
             <div>
-                <button onClick={() => setModalIsOpen(true)}>Criar tarefa</button>
-                <button onClick={() => handleSortByStatus()}>Ordenar por status</button>
-                <button onClick={() => handleSortByDate()}>Ordenar por prazo</button>
-                {
-                    userTaks.map(item =>
-                        <Card
-                            key={item.id}
-                            id={item.id}
-                            title={item.title}
-                            description={item.description}
-                            createDate={item.createDate}
-                            status={item.status}
-                            onDelete={() => handleExcluirTarefa(item.id)}
-                            onCompleting={() => handleConcluirTarefa(item.id)}
-                            onEdit={() => handleAbrirEditarTarefa(item.id)}
-                        />
-                    )
-                }
+                <div className="Home__header">
+                    <Button
+                        onClick={() => setModalIsOpen(true)}
+                        type="button"
+                        design="primary"
+                    >Criar tarefa</Button>
+                    <Button
+                        onClick={() => handleSortByStatus()}
+                        type="button"
+                        design="tertiary"
+                    >Ordenar por status</Button>
+                    <Button
+                        onClick={() => handleSortByDate()}
+                        type="button"
+                        design="tertiary"
+                    >Ordenar por prazo</Button>
+                </div>
+                <div className="Home__cardList">
+                    {
+                        userTaks.map(item =>
+                            <Card
+                                key={item.id}
+                                id={item.id}
+                                title={item.title}
+                                description={item.description}
+                                createDate={item.createDate}
+                                status={item.status}
+                                onDelete={() => handleExcluirTarefa(item.id)}
+                                onCompleting={() => handleConcluirTarefa(item.id)}
+                                onEdit={() => handleAbrirEditarTarefa(item.id)}
+                            />
+                        )
+                    }
+                </div>
             </div>
             <ToastContainer />
-        </>
+        </div>
     )
 }
 

@@ -1,0 +1,14 @@
+.Form{
+    padding: 50px;
+    background-color: white;
+    flex-wrap: nowrap;
+    border-radius: 20px;
+}
+
+.Form__title{
+    display: flex;
+    padding: 10px;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+}
